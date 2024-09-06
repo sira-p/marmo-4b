@@ -36,6 +36,7 @@ Install dependencies by running:
 
 ```bash
 !pip install ultralytics segment-anything opencv-python-headless torch matplotlib pandas
+```
 
 ## Data Preparation
 1. Download Marmoset Data: Automatically download the dataset using:
@@ -54,7 +55,7 @@ for filename in os.listdir(data_path):
     if img is not None:
         images.append(img)
 
-##Notebook Structure
+## Notebook Structure
 1. Data Preparation
 Mount Google Drive: Access the dataset from Google Drive.
 from google.colab import drive
