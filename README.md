@@ -58,13 +58,16 @@ for filename in os.listdir(data_path):
 ## Notebook Structure
 1. Data Preparation
 Mount Google Drive: Access the dataset from Google Drive.
+```python
 from google.colab import drive
 drive.mount('/content/drive')
+```
 
 Download and Preprocess Data: Download marmoset data and prepare it for model training.
 
 2. Fine-Tuning YOLOv8 for Pose Estimation
 Initialize YOLOv8 Model: Load the YOLOv8 model for pose estimation.
+```python
 from ultralytics import YOLO
 
 # Load YOLOv8 model for pose estimation
@@ -72,11 +75,12 @@ model = YOLO('yolov8n-pose.pt')
 
 Train the Model: Fine-tune the YOLOv8 model on the marmoset dataset.
 model.train(data='marmoset_data.yaml', epochs=50, imgsz=640)
+```
 
 3.  Generating Masks Using SAM
 Apply SAM for Mask Generation: Use the Segment Anything Model (SAM) to generate masks for each frame.
 from segment_anything import SAM, SamPredictor
-
+```python
 # Load SAM model
 sam_model = SAM('sam_vit_b')
 sam_predictor = SamPredictor(sam_model)
@@ -86,33 +90,37 @@ masks = []
 for img in images:
     mask = sam_predictor.predict(img)
     masks.append(mask)
-
+```
 4. Instance Segmentation with YOLO
 Combine Masks and Bounding Boxes: Integrate SAM-generated masks with YOLO bounding boxes for instance segmentation.
+```python
 # Perform instance segmentation using YOLOv8
 results = model.predict(source=masks, conf=0.25)
 
 # Visualize results
 model.show(results)
-
+```
 5. Joint Pose Estimation and Instance Segmentation [Advanced]
 Joint Training: Train a model that performs both pose estimation and instance segmentation.
+```python
 # Joint training for pose estimation and instance segmentation
 joint_model = YOLO('yolov8n-pose-instance-segmentation.pt')
 joint_model.train(data='marmoset_data.yaml', epochs=100, imgsz=640)
-
+```
 6. Visualization and Evaluation
 Evaluate Results: Visualize and evaluate the performance of the models.
 import matplotlib.pyplot as plt
-
+```python
 # Visualization of results
 for i, result in enumerate(results):
     plt.imshow(result.img)
     plt.title(f"Result {i}")
     plt.show()
-
+```
 7. Results Analysis
 Analyze Results: Analyze the performance metrics, including precision, recall, and F1-score.
+```python
 # Example of analyzing model performance
 metrics = model.evaluate()
 print(metrics)
+```
